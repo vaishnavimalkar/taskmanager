@@ -11,23 +11,19 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static('public'));
 
-// Load tasks
 function loadTasks() {
   if (!fs.existsSync(DATA_FILE)) return [];
   return JSON.parse(fs.readFileSync(DATA_FILE));
 }
 
-// Save tasks
 function saveTasks(tasks) {
   fs.writeFileSync(DATA_FILE, JSON.stringify(tasks, null, 2));
 }
 
-// Get all tasks
 app.get('/api/tasks', (req, res) => {
   res.json(loadTasks());
 });
 
-// Add new task
 app.post('/api/tasks', (req, res) => {
   const tasks = loadTasks();
   const newTask = { id: Date.now(), ...req.body };
@@ -36,7 +32,6 @@ app.post('/api/tasks', (req, res) => {
   res.json(newTask);
 });
 
-// Delete task
 app.delete('/api/tasks/:id', (req, res) => {
   let tasks = loadTasks();
   tasks = tasks.filter(task => task.id != req.params.id);
